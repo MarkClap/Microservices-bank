@@ -1,0 +1,305 @@
+{
+  "info": {
+    "_postman_id": "fd35a1e9-c89d-4b13-868c-158aa52de6bc",
+    "name": "Reto BFF",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "39777912"
+  },
+  "item": [
+    {
+      "name": "Cliente Microservice",
+      "item": [
+        {
+          "name": "Crear cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigoUnico\": \"CLI001\",\n  \"nombres\": \"User\",\n  \"apellidos\": \"Test\",\n  \"tipoDocumento\": \"DNI\",\n  \"numeroDocumento\": \"123456789\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8082/cliente/api/clientes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "cliente",
+                "api",
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener cliente por código",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/cliente/api/clientes/CLI001",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "cliente",
+                "api",
+                "clientes",
+                "CLI001"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener todos los clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/cliente/api/clientes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "cliente",
+                "api",
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Productos Microservice",
+      "item": [
+        {
+          "name": "Crear producto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigoCliente\": \"CLI001\",\n  \"tipoProducto\": \"Cuenta Ahorros\",\n  \"nombre\": \"Ahorros Plus\",\n  \"saldo\": 120000.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8083/productos/api/productos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8083",
+              "path": [
+                "productos",
+                "api",
+                "productos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener productos por cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/productos/api/productos/cliente/CLI001",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8083",
+              "path": [
+                "productos",
+                "api",
+                "productos",
+                "cliente",
+                "CLI001"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "BFF",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8081/bff/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "bff",
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Encriptar código",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTc3MTM1MTE3NCwiZXhwIjoxNzcxNDM3NTc0fQ.EUt1-HSQgsmB6WkXma-L_K9AhcWaMq10Ze_wFHq76vE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/bff/api/clientes/test/encrypt/CLI001",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "bff",
+                "api",
+                "clientes",
+                "test",
+                "encrypt",
+                "CLI001"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener cliente con productos (encriptado)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTc3MTM1MTE3NCwiZXhwIjoxNzcxNDM3NTc0fQ.EUt1-HSQgsmB6WkXma-L_K9AhcWaMq10Ze_wFHq76vE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Tracking-Id",
+                "value": "{{trackingId}}",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8081/bff/api/clientes/{{codigoEncriptado}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "bff",
+                "api",
+                "clientes",
+                "{{codigoEncriptado}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Health check",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTc3MTM1MTE3NCwiZXhwIjoxNzcxNDM3NTc0fQ.EUt1-HSQgsmB6WkXma-L_K9AhcWaMq10Ze_wFHq76vE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/bff/api/clientes/health/check",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "bff",
+                "api",
+                "clientes",
+                "health",
+                "check"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "codigoEncriptado",
+      "value": ""
+    },
+    {
+      "key": "trackingId",
+      "value": ""
+    }
+  ]
+}

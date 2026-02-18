@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-dbs.sql:/docker-entrypoint-initdb.d/init-dbs.sql
+    networks:
+      - reto-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cliente-microservice:
+    build: ./cliente-microservice
+    container_name: cliente-ms
+    environment:
+      SERVER_PORT: 8082
+      CONTEXT_PATH: /cliente
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cliente_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - reto-network
+
+  productos-microservice:
+    build: ./productos-microservice
+    container_name: productos-ms
+    environment:
+      SERVER_PORT: 8083
+      CONTEXT_PATH: /productos
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/productos_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8083:8083"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - reto-network
+
+  bff-microservice:
+    build: ./bff-microservice
+    container_name: bff-ms
+    environment:
+      SERVER_PORT: 8081
+      CONTEXT_PATH: /bff
+      CLIENTE_SERVICE_URL: http://cliente-ms:8082/cliente
+      PRODUCTOS_SERVICE_URL: http://productos-ms:8083/productos
+      JWT_SECRET: "1234567890123456789012345678901234567890123456789012345678901234"
+      ENCRYPTION_KEY: MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=
+    ports:
+      - "8081:8081"
+    depends_on:
+      - cliente-microservice
+      - productos-microservice
+    networks:
+      - reto-network
+
+volumes:
+  postgres-data:
+
+networks:
+  reto-network:
+    driver: bridge
